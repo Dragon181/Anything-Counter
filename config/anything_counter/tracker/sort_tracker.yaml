@@ -1,0 +1,4 @@
+_target_: anything_counter.trackers.sort_tracker.SortTracker
+max_age: 1
+min_hits: 3
+iou_threshold: 0.3
