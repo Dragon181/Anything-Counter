@@ -29,6 +29,18 @@ class Box(Generic[Coordinate]):
     top_left: Point[Coordinate]
     bottom_right: Point[Coordinate]
 
+    @property
+    def center(self) -> Point[Coordinate]:
+        if Coordinate == int:
+            return Point(
+                x=(self.top_left.x + self.bottom_right.x) // 2,
+                y=(self.top_left.y + self.bottom_right.y) // 2,
+            )
+        return Point(
+            x=(self.top_left.x + self.bottom_right.x) / 2,
+            y=(self.top_left.y + self.bottom_right.y) / 2,
+        )
+
 
 @dataclass
 class Detection:
@@ -55,3 +67,9 @@ TrackingResults = Dict[int, Detections]
 class CountResult:
     in_count: int = 0
     out_count: int = 0
+
+
+@dataclass
+class Line:
+    start: Point[float]
+    end: Point[float]

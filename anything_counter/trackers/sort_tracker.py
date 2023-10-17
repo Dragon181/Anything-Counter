@@ -27,13 +27,16 @@ class SortTracker(Tracker):
 
         if dets:
             tracks = self._sort.update(dets=np.stack(dets))
+            width = detections[-1].absolute_box.bottom_right.x / detections[-1].relative_box.bottom_right.x
+            height = detections[-1].absolute_box.bottom_right.y / detections[-1].relative_box.bottom_right.y
 
             for track in tracks:
                 track_id = int(track[-1])
                 x1, y1, x2, y2 = track[:4]
                 detection = Detection(
                     absolute_box=Box(top_left=Point(x=int(x1), y=int(y1)), bottom_right=Point(x=int(x2), y=int(y2))),
-                    relative_box=Box(top_left=Point(x=0, y=0), bottom_right=Point(x=0, y=0)),
+                    relative_box=Box(
+                        top_left=Point(x=x1 / width, y=y1 / height), bottom_right=Point(x=x2 / width, y=y2 / height)),
                     score=0,
                     label_as_str='person',
                     label_as_int=0,

@@ -1,1 +1,2 @@
 _target_: anything_counter.visualizers.opencv_visualizer.OpenCVVisualizer
+list_of_points: ${anything_counter.counter.list_of_points}
