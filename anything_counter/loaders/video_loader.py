@@ -16,5 +16,7 @@ class VideoLoader(Loader):
 
         while self.cap.isOpened():
             ret, frame = self.cap.read()
+            if frame is None:
+                break
             if ret == True:
                 yield frame
