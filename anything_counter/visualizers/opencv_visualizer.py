@@ -2,7 +2,7 @@ from typing import Tuple, List
 
 import cv2
 
-from anything_counter.anything_counter.models import TrackingResults, CountResult, ImageArr, Point, Line
+from anything_counter.anything_counter.models import TrackingResults, CountResult, ImageArr, Point, Line, Detections
 from anything_counter.anything_counter.visualizer import Visualizer
 
 
@@ -23,6 +23,17 @@ class OpenCVVisualizer(Visualizer):
         )
         return image
 
+    def draw_path(self, detections: Detections, image: ImageArr):
+
+        last_detection = detections[0]
+        for detection in detections[1:]:
+            cv2.line(
+                image, last_detection.absolute_box.center.as_tuple,
+                detection.absolute_box.center.as_tuple, (255, 0, 0), 10
+            )
+            last_detection = detection
+        return image
+
     def paint(self, tracking_results: TrackingResults, counter: CountResult, image: ImageArr) -> ImageArr:
 
         h, w = image.shape[:2]
@@ -40,6 +51,7 @@ class OpenCVVisualizer(Visualizer):
                 image, str(track_id), detections[-1].absolute_box.top_left.as_tuple, cv2.FONT_HERSHEY_SIMPLEX,
                 5, (0, 255, 0), 10, cv2.LINE_AA
             )
+            image = self.draw_path(detections, image)
         return self.draw_counter(counter, image)
 
     def visualize(self, image: ImageArr) -> None:

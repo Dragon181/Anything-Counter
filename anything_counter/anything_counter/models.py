@@ -31,7 +31,7 @@ class Box(Generic[Coordinate]):
 
     @property
     def center(self) -> Point[Coordinate]:
-        if Coordinate == int:
+        if isinstance(self.top_left.x, int):
             return Point(
                 x=(self.top_left.x + self.bottom_right.x) // 2,
                 y=(self.top_left.y + self.bottom_right.y) // 2,
