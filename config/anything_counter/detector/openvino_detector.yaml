@@ -1,6 +1,6 @@
 _target_: anything_counter.detectors.openvino_detector.OpenVINODetector
-model: assets/models/person-detection-0202/FP32/person-detection-0202.xml
-weights: assets/models/person-detection-0202/FP32/person-detection-0202.bin
+model: assets/models/person-detection-0202/FP16-INT8/person-detection-0202.xml
+weights: assets/models/person-detection-0202/FP16-INT8/person-detection-0202.bin
 scale_factor: 1
 score_threshold: 0.6
 nms_threshold: 0.4
