@@ -20,7 +20,7 @@ Before run you should change [configs](config/anything_counter).
 Download some detector weights ([for example](https://github.com/openvinotoolkit/open_model_zoo/blob/master/models/intel/person-detection-0202/README.md)), put them in assets and run Anything-Counter!
 ```bash
 # from repository root
-BASE_DIR=$(pwd) python3 -m plate_detector.main
+BASE_DIR=$(pwd) python3 -m anything_counter.main
 ```
 
 ## Development
