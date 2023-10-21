@@ -27,7 +27,7 @@ class AnythingCounter:
 
         for image in self._loader.load():
             detections: Detections = self._detector.detect(image=image)
-            tracking_results = self._tracker.track(detections=detections)
+            tracking_results: TrackingResults = self._tracker.track(detections=detections, image=image)
 
             count_result: CountResult = self._counter.count(tracking_results=tracking_results)
 

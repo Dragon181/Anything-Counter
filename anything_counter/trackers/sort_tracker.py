@@ -3,7 +3,8 @@ from typing import Dict
 
 import numpy as np
 
-from anything_counter.anything_counter.models import Detections, TrackingResults, TrackingResult, Detection, Box, Point
+from anything_counter.anything_counter.models import Detections, TrackingResults, TrackingResult, Detection, Box, Point, \
+    ImageArr
 from anything_counter.anything_counter.tracker import Tracker
 from anything_counter.trackers.sort import Sort
 
@@ -16,7 +17,8 @@ class SortTracker(Tracker):
         self._tracking_results: TrackingResults = defaultdict(list)
         self._miss_track: Dict[int, int] = defaultdict(int)
 
-    def track(self, detections: Detections) -> TrackingResults:
+    def track(self, detections: Detections, image: ImageArr) -> TrackingResults:
+        height, width = image.shape[:2]
         dets = [
             np.array([
                 det.absolute_box.top_left.x, det.absolute_box.top_left.y,
@@ -27,8 +29,6 @@ class SortTracker(Tracker):
 
         if dets:
             tracks = self._sort.update(dets=np.stack(dets))
-            width = detections[-1].absolute_box.bottom_right.x / detections[-1].relative_box.bottom_right.x
-            height = detections[-1].absolute_box.bottom_right.y / detections[-1].relative_box.bottom_right.y
 
             for track in tracks:
                 track_id = int(track[-1])

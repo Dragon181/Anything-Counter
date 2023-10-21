@@ -7,6 +7,7 @@ from anything_counter.anything_counter.models import TrackingResults, CountResul
 def ccw(a: Point, b: Point, c: Point) -> int:
     return (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)
 
+
 def is_intersecting(line1: Line, line2: Line) -> Optional[int]:
 
     o1 = ccw(line1.start, line1.end, line2.start)
@@ -39,4 +40,5 @@ class LineCounter(Counter):
                 self._counter.in_count += 1
             elif intersection == -1:
                 self._counter.out_count += 1
+
         return self._counter
