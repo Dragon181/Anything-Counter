@@ -46,14 +46,6 @@ class OpenVINODetector(Detector, OpenVINOAdapterMixin):
                     label_as_int=0,
                 ),
             )
-        # for detection in detections:
-        #     cv2.rectangle(
-        #         original_image, detection.absolute_box.top_left.as_tuple, detection.absolute_box.bottom_right.as_tuple,
-        #         (255, 0, 0), 5
-        #     )
-        #
-        # cv2.imshow('out', cv2.resize(original_image, (512, 512)))
-        # cv2.waitKey()
 
         return detections
 
