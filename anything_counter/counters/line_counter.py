@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional
 
 from anything_counter.anything_counter.counter import Counter
@@ -38,7 +39,9 @@ class LineCounter(Counter):
             intersection = is_intersecting(self._line, track_line)
             if intersection == 1:
                 self._counter.in_count += 1
+                logging.info(f'IN event! \n IN: {self._counter.in_count}\n OUT: {self._counter.out_count}')
             elif intersection == -1:
                 self._counter.out_count += 1
+                logging.info(f'OUT event! \n IN: {self._counter.in_count}\n OUT: {self._counter.out_count}')
 
         return self._counter
