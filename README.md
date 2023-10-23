@@ -22,6 +22,11 @@ Download some detector weights ([for example](https://github.com/openvinotoolkit
 # from repository root
 BASE_DIR=$(pwd) python3 -m anything_counter.main
 ```
+If you want to run it with Docker:
+```bash
+docker build -t anything_counter ./
+docker run --rm anything_counter
+```
 
 ## Development
 You can write your own [detector](anything_counter/detectors), [tracker](anything_counter/trackers) or [loader](anything_counter/loaders).
