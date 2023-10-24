@@ -3,7 +3,7 @@ import cv2
 from anything_counter.anything_counter.counter import Counter
 from anything_counter.anything_counter.detector import Detector
 from anything_counter.anything_counter.loader import Loader
-from anything_counter.anything_counter.models import Detections, TrackingResults, CountResult
+from anything_counter.anything_counter.models import Detections, TrackingResults, CountResult, AreaCountResult
 from anything_counter.anything_counter.tracker import Tracker
 from anything_counter.anything_counter.visualizer import Visualizer
 
@@ -29,7 +29,7 @@ class AnythingCounter:
             detections: Detections = self._detector.detect(image=image)
             tracking_results: TrackingResults = self._tracker.track(detections=detections, image=image)
 
-            count_result: CountResult = self._counter.count(tracking_results=tracking_results)
+            count_result: AreaCountResult = self._counter.count(tracking_results=tracking_results)
 
             image_result = self._visualizer.paint(tracking_results=tracking_results, counter=count_result, image=image)
             self._visualizer.visualize(image=image_result)

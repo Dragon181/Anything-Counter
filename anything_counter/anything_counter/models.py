@@ -69,6 +69,9 @@ class CountResult:
     out_count: int = 0
 
 
+AreaCountResult = Dict[str, CountResult]
+
+
 @dataclass
 class Line:
     start: Point[float]

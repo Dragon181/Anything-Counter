@@ -1,27 +1,18 @@
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
 import cv2
 
-from anything_counter.anything_counter.models import TrackingResults, CountResult, ImageArr, Point, Line, Detections
+from anything_counter.anything_counter.models import TrackingResults, CountResult, ImageArr, Point, Line, Detections, \
+    AreaCountResult
 from anything_counter.anything_counter.visualizer import Visualizer
 
 
 class OpenCVVisualizer(Visualizer):
-    def __init__(self, list_of_points: List[List[float]]):
-        list_of_points = sorted(
-            [Point(x=x, y=y) for (x, y) in list_of_points], key=lambda point: point.x ** 2 + point.y ** 2)
-        self._line = Line(start=list_of_points[0], end=list_of_points[1])
-
-    def draw_counter(self, counter: CountResult, image: ImageArr) -> ImageArr:
-        cv2.putText(
-            image, f'IN:{counter.in_count}', (50, 150), cv2.FONT_HERSHEY_SIMPLEX,
-            5, (0, 255, 0), 10, cv2.LINE_AA
-        )
-        cv2.putText(
-            image, f'OUT:{counter.out_count}', (50, 300), cv2.FONT_HERSHEY_SIMPLEX,
-            5, (0, 0, 255), 10, cv2.LINE_AA
-        )
-        return image
+    def __init__(self, dict_of_lines: Dict[str, Dict[str, float]]):
+        self._lines = {
+            line_name: Line(start=Point(x=line['x1'], y=line['y1']), end=Point(x=line['x2'], y=line['y2']))
+            for line_name, line in dict_of_lines.items()
+        }
 
     def draw_path(self, detections: Detections, image: ImageArr):
 
@@ -34,13 +25,36 @@ class OpenCVVisualizer(Visualizer):
             last_detection = detection
         return image
 
-    def paint(self, tracking_results: TrackingResults, counter: CountResult, image: ImageArr) -> ImageArr:
-
+    def draw_lines_with_counters(self, image, counter):
         h, w = image.shape[:2]
-        start_point = (int(self._line.start.x * w), int(self._line.start.y * h))
-        end_point = (int(self._line.end.x * w), int(self._line.end.y * h))
 
-        cv2.line(image, start_point, end_point, (0, 255, 255), 10)
+        for line_name, line in self._lines.items():
+            start_point = (int(line.start.x * w), int(line.start.y * h))
+            end_point = (int(line.end.x * w), int(line.end.y * h))
+
+            # draw line
+            cv2.line(image, start_point, end_point, (0, 255, 255), 10)
+
+            # write line name
+            cv2.putText(
+                image, line_name, (start_point[0], start_point[1] + 100), cv2.FONT_HERSHEY_SIMPLEX,
+                5, (0, 0, 0), 15, cv2.LINE_AA
+            )
+
+            # write in and out count
+            cv2.putText(
+                image, f'{counter[line_name].in_count}', (start_point[0] - 100, start_point[1] + 100),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                5, (0, 255, 0), 10, cv2.LINE_AA
+            )
+            cv2.putText(
+                image, f'{counter[line_name].out_count}', end_point, cv2.FONT_HERSHEY_SIMPLEX,
+                5, (0, 0, 255), 10, cv2.LINE_AA
+            )
+        return image
+
+    def paint(self, tracking_results: TrackingResults, counter: AreaCountResult, image: ImageArr) -> ImageArr:
+        image = self.draw_lines_with_counters(image=image, counter=counter)
         for track_id, detections in tracking_results.items():
 
             cv2.rectangle(
@@ -52,7 +66,7 @@ class OpenCVVisualizer(Visualizer):
                 5, (0, 255, 0), 10, cv2.LINE_AA
             )
             image = self.draw_path(detections, image)
-        return self.draw_counter(counter, image)
+        return image
 
     def visualize(self, image: ImageArr) -> None:
         cv2.imshow('Frame', cv2.resize(image, (0, 0), fx=0.2, fy=0.2))

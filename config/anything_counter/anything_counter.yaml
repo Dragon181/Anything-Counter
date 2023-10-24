@@ -3,5 +3,5 @@ defaults:
   - loader: video_loader
   - detector: openvino_detector
   - tracker: sort_tracker
-  - counter: line_counter
+  - counter: lines_counter
   - visualizer: opencv_visualizer
