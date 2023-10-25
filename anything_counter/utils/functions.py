@@ -1,6 +1,6 @@
 from typing import List
 
-import cv2  # type: ignore
+import cv2
 import numpy as np
 from nptyping import Float32, NDArray, Shape, UInt8
 

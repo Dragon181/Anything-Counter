@@ -1,6 +1,6 @@
 from typing import Iterator
 
-import cv2  # type: ignore
+import cv2
 
 from anything_counter.anything_counter.loader import Loader
 from anything_counter.anything_counter.models import ImageArr

@@ -3,7 +3,7 @@ import cv2
 from anything_counter.anything_counter.counter import Counter
 from anything_counter.anything_counter.detector import Detector
 from anything_counter.anything_counter.loader import Loader
-from anything_counter.anything_counter.models import Detections, TrackingResults, CountResult, AreaCountResult
+from anything_counter.anything_counter.models import Detections, TrackingResults, AreaCountResult
 from anything_counter.anything_counter.tracker import Tracker
 from anything_counter.anything_counter.visualizer import Visualizer
 

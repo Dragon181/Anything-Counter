@@ -1,9 +1,10 @@
-from typing import Tuple, List, Dict
+from typing import Dict
 
 import cv2
 
-from anything_counter.anything_counter.models import TrackingResults, CountResult, ImageArr, Point, Line, Detections, \
-    AreaCountResult
+from anything_counter.anything_counter.models import (
+    TrackingResults, ImageArr, Point, Line, Detections, AreaCountResult
+)
 from anything_counter.anything_counter.visualizer import Visualizer
 
 

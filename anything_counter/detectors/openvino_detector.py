@@ -1,6 +1,6 @@
 from typing import Any
 
-import cv2  # type: ignore
+import cv2
 import numpy as np
 
 from anything_counter.anything_counter.detector import Detector

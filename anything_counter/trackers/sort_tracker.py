@@ -2,9 +2,11 @@ from collections import defaultdict
 from typing import Dict
 
 import numpy as np
+from nptyping import NDArray, Shape, UInt8
 
-from anything_counter.anything_counter.models import Detections, TrackingResults, TrackingResult, Detection, Box, Point, \
-    ImageArr
+from anything_counter.anything_counter.models import (
+    Detections, TrackingResults, TrackingResult, Detection, Box, Point, ImageArr,
+)
 from anything_counter.anything_counter.tracker import Tracker
 from anything_counter.trackers.sort import Sort
 
@@ -17,13 +19,27 @@ class SortTracker(Tracker):
         self._tracking_results: TrackingResults = {}
         self._miss_track: Dict[int, int] = defaultdict(int)
 
+    def _update_track_result(self, track_id: int, detection: Detection):
+        if not self._tracking_results.get(track_id):
+            self._tracking_results[track_id] = TrackingResult(
+                intersection_dict=defaultdict(bool), detections=[detection]
+            )
+        else:
+            self._tracking_results[track_id].detections.append(detection)
+
+    def _clean_track_results(self, tracks: NDArray[Shape['* count, 5 shapes'], UInt8]):
+        all_tracks = set(track[-1] for track in tracks)
+        track_ids = list(self._miss_track.keys())
+        for track_id in track_ids:
+            if track_id not in all_tracks:
+                self._miss_track[track_id] += 1
+                if self._miss_track[track_id] > self._max_age:
+                    del self._tracking_results[track_id]
+                    del self._miss_track[track_id]
+
     def track(self, detections: Detections, image: ImageArr) -> TrackingResults:
         height, width = image.shape[:2]
-        dets = [
-            np.array([
-                det.absolute_box.top_left.x, det.absolute_box.top_left.y,
-                det.absolute_box.bottom_right.x, det.absolute_box.bottom_right.y, det.score
-            ]) for det in detections]
+        dets = [det.as_array for det in detections]
 
         tracks = []
 
@@ -42,23 +58,11 @@ class SortTracker(Tracker):
                     label_as_int=0,
                 )
 
-                if not self._tracking_results.get(track_id):
-                    self._tracking_results[track_id] = TrackingResult(
-                        intersection_dict=defaultdict(bool), detections=[detection]
-                    )
-                else:
-                    self._tracking_results[track_id].detections.append(detection)
+                self._update_track_result(track_id=track_id, detection=detection)
 
                 if not self._miss_track.get(track_id):
                     self._miss_track[track_id] = 0
 
-        all_tracks = set(track[-1] for track in tracks)
-        track_ids = list(self._miss_track.keys())
-        for track_id in track_ids:
-            if track_id not in all_tracks:
-                self._miss_track[track_id] += 1
-                if self._miss_track[track_id] > self._max_age:
-                    del self._tracking_results[track_id]
-                    del self._miss_track[track_id]
+        self._clean_track_results(tracks)
 
         return self._tracking_results

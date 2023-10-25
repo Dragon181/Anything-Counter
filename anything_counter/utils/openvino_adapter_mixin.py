@@ -3,7 +3,7 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Any
 
-from openvino.runtime import Core  # type: ignore
+from openvino.runtime import Core
 
 from anything_counter.anything_counter.models import Blob, ImageArr
 

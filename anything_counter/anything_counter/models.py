@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import TypeVar, Generic, Tuple, List, Union, Dict, Optional
 
-from nptyping import Float32, Int32, NDArray, Shape, UInt8
+import numpy as np
+from nptyping import NDArray, Shape, UInt8
 
 
 ImageArr = NDArray[Shape['* height, * width, 3 bgr'], UInt8]
@@ -49,6 +50,13 @@ class Detection:
     score: Optional[float]
     label_as_str: str
     label_as_int: int
+
+    @property
+    def as_array(self):
+        return np.array([
+            self.absolute_box.top_left.x, self.absolute_box.top_left.y,
+            self.absolute_box.bottom_right.x, self.absolute_box.bottom_right.y, self.score
+        ])
 
 
 Detections = List[Detection]
