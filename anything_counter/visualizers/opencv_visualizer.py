@@ -55,8 +55,8 @@ class OpenCVVisualizer(Visualizer):
 
     def paint(self, tracking_results: TrackingResults, counter: AreaCountResult, image: ImageArr) -> ImageArr:
         image = self.draw_lines_with_counters(image=image, counter=counter)
-        for track_id, detections in tracking_results.items():
-
+        for track_id, track_result in tracking_results.items():
+            detections = track_result.detections
             cv2.rectangle(
                 image, detections[-1].absolute_box.top_left.as_tuple, detections[-1].absolute_box.bottom_right.as_tuple,
                 (255, 0, 0), 5,

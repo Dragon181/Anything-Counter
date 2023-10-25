@@ -14,7 +14,7 @@ class SortTracker(Tracker):
         self._sort = Sort(max_age=max_age, min_hits=min_hits, iou_threshold=iou_threshold)
 
         self._max_age = max_age
-        self._tracking_results: TrackingResults = defaultdict(list)
+        self._tracking_results: TrackingResults = {}
         self._miss_track: Dict[int, int] = defaultdict(int)
 
     def track(self, detections: Detections, image: ImageArr) -> TrackingResults:
@@ -37,11 +37,18 @@ class SortTracker(Tracker):
                     absolute_box=Box(top_left=Point(x=int(x1), y=int(y1)), bottom_right=Point(x=int(x2), y=int(y2))),
                     relative_box=Box(
                         top_left=Point(x=x1 / width, y=y1 / height), bottom_right=Point(x=x2 / width, y=y2 / height)),
-                    score=0,
+                    score=None,
                     label_as_str='person',
                     label_as_int=0,
                 )
-                self._tracking_results[track_id].append(detection)
+
+                if not self._tracking_results.get(track_id):
+                    self._tracking_results[track_id] = TrackingResult(
+                        intersection_dict=defaultdict(bool), detections=[detection]
+                    )
+                else:
+                    self._tracking_results[track_id].detections.append(detection)
+
                 if not self._miss_track.get(track_id):
                     self._miss_track[track_id] = 0
 

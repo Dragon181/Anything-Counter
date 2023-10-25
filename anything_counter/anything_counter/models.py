@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypeVar, Generic, Tuple, List, Union, Dict
+from typing import TypeVar, Generic, Tuple, List, Union, Dict, Optional
 
 from nptyping import Float32, Int32, NDArray, Shape, UInt8
 
@@ -46,7 +46,7 @@ class Box(Generic[Coordinate]):
 class Detection:
     absolute_box: Box[int]
     relative_box: Box[float]
-    score: float
+    score: Optional[float]
     label_as_str: str
     label_as_int: int
 
@@ -56,11 +56,11 @@ Detections = List[Detection]
 
 @dataclass
 class TrackingResult:
-    track_id: int
+    intersection_dict: Dict[str, bool]
     detections: Detections
 
 
-TrackingResults = Dict[int, Detections]
+TrackingResults = Dict[int, TrackingResult]
 
 
 @dataclass

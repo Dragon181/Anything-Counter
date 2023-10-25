@@ -32,13 +32,22 @@ class LinesCounter(Counter):
 
     def count(self, tracking_results: TrackingResults) -> AreaCountResult:
         for line_name, line in self._lines.items():
-            for track, dets in tracking_results.items():
+            for track, track_result in tracking_results.items():
+
+                intersection_dict = track_result.intersection_dict
+                dets = track_result.detections
+
                 if len(dets) < 2:
                     continue
+
                 last_det = dets[-2]
                 now_det = dets[-1]
                 track_line = Line(last_det.relative_box.center, now_det.relative_box.center)
                 intersection = is_intersecting(line, track_line)
+
+                if intersection and intersection_dict[line_name]:
+                    continue
+
                 if intersection == 1:
                     self._counters[line_name].in_count += 1
                     logging.info(
