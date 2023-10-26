@@ -62,6 +62,8 @@ class SortTracker(Tracker):
 
                 if not self._miss_track.get(track_id):
                     self._miss_track[track_id] = 0
+        else:
+            self._sort.update(dets=np.empty((0, 5)))
 
         self._clean_track_results(tracks)
 
