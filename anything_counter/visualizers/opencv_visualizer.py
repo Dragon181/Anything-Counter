@@ -15,7 +15,7 @@ class OpenCVVisualizer(Visualizer):
             for line_name, line in dict_of_lines.items()
         }
 
-    def draw_path(self, detections: Detections, image: ImageArr):
+    def draw_path(self, detections: Detections, image: ImageArr) -> ImageArr:
 
         last_detection = detections[0]
         for detection in detections[1:]:
@@ -26,7 +26,7 @@ class OpenCVVisualizer(Visualizer):
             last_detection = detection
         return image
 
-    def draw_lines_with_counters(self, image, counter):
+    def draw_lines_with_counters(self, image, counter) -> ImageArr:
         h, w = image.shape[:2]
 
         for line_name, line in self._lines.items():

@@ -52,7 +52,7 @@ class Detection:
     label_as_int: int
 
     @property
-    def as_array(self):
+    def as_array(self) -> NDArray[Shape['4 box'], UInt8]:
         return np.array([
             self.absolute_box.top_left.x, self.absolute_box.top_left.y,
             self.absolute_box.bottom_right.x, self.absolute_box.bottom_right.y, self.score
