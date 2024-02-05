@@ -1,2 +1,2 @@
 _target_: anything_counter.loaders.video_loader.VideoLoader
-video_path: ${oc.env:BASE_DIR}/assets/videos/test_video.mp4
+video_path: assets/videos/test_video.mp4
