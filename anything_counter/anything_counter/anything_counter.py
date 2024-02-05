@@ -36,5 +36,4 @@ class AnythingCounter:
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        self._loader.cap.release()
-        cv2.destroyAllWindows()
+        self._loader.end_stream()

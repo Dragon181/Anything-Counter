@@ -11,12 +11,16 @@ class VideoLoader(Loader):
         self.cap = cv2.VideoCapture(video_path)
 
     def load(self) -> Iterator[ImageArr]:
-        if self.cap.isOpened() == False:
+        if not self.cap.isOpened():
             print("Error opening video stream or file")
 
         while self.cap.isOpened():
             ret, frame = self.cap.read()
             if frame is None:
                 break
-            if ret == True:
+            if ret:
                 yield frame
+
+    def end_stream(self) -> None:
+        self.cap.release()
+        cv2.destroyAllWindows()

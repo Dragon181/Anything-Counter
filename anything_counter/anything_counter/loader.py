@@ -9,3 +9,7 @@ class Loader(ABC):
     @abstractmethod
     def load(self) -> Iterator[ImageArr]:
         raise NotImplementedError
+
+    @abstractmethod
+    def end_stream(self) -> None:
+        raise NotImplementedError
