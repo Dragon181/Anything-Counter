@@ -9,6 +9,7 @@ from anything_counter.anything_counter.models import (
 )
 from anything_counter.anything_counter.tracker import Tracker
 from anything_counter.trackers.sort import Sort
+from anything_counter.utils.functions import intersection_over_union
 
 
 class SortTracker(Tracker):
@@ -37,6 +38,23 @@ class SortTracker(Tracker):
                     del self._tracking_results[track_id]
                     del self._miss_track[track_id]
 
+    def _get_det_score(self, bbox, detections):
+        # TODO: do some smarter score saving
+
+        max_iou = -1.0
+        max_score = None
+
+        for det in detections:
+            det_bbox = det.as_array[:4]
+            score = det.as_array[4]
+
+            iou = intersection_over_union(bbox, det_bbox)
+            if iou > max_iou:
+                max_iou = iou
+                max_score = score
+
+        return max_score
+
     def track(self, detections: Detections, image: ImageArr) -> TrackingResults:
         height, width = image.shape[:2]
         dets = [det.as_array for det in detections]
@@ -53,7 +71,7 @@ class SortTracker(Tracker):
                     absolute_box=Box(top_left=Point(x=int(x1), y=int(y1)), bottom_right=Point(x=int(x2), y=int(y2))),
                     relative_box=Box(
                         top_left=Point(x=x1 / width, y=y1 / height), bottom_right=Point(x=x2 / width, y=y2 / height)),
-                    score=None,
+                    score=self._get_det_score(track[:4], detections),
                     label_as_str='person',
                     label_as_int=0,
                 )
